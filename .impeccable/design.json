@@ -1,0 +1,33 @@
+{
+  "surface": "listing-ledger local demo",
+  "mode": "operate",
+  "world": "Daylight paper-and-ink review workspace with a continuous ruled event timeline and warm vermilion accent.",
+  "tokens": {
+    "color": {
+      "paper": "#f7f5f0",
+      "surface": "#fffefa",
+      "ink": "#24231f",
+      "secondary": "#625f58",
+      "quiet": "#6e6a62",
+      "rule": "#d8d4cb",
+      "accent": "#a33d31",
+      "accentWash": "#f3e8e4",
+      "positive": "#315e49"
+    },
+    "type": {
+      "body": "system sans-serif stack",
+      "data": "system monospace stack",
+      "headingTracking": "-0.025em"
+    },
+    "layout": {
+      "maxWidth": "1180px",
+      "readingMeasure": "68ch",
+      "breakpoint": "760px"
+    },
+    "motion": {
+      "press": "120ms ease-out",
+      "keyboardReplay": "none",
+      "reducedMotion": "honored"
+    }
+  }
+}

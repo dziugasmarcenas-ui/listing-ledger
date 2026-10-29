@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f5f0">
+    <meta name="description" content="Explore a fictional listing's append-only observation history and reconstructed state.">
+    <title>Listing Ledger — observation replay</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="/" aria-label="Listing Ledger home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>Listing Ledger</span>
+      </a>
+      <nav class="top-nav" aria-label="Resources">
+        <span class="local-note"><span class="status-dot" aria-hidden="true"></span>Local demo</span>
+        <a href="/docs" target="_blank" rel="noreferrer">API docs <svg class="external-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 6.5 9.5"/><path d="M11 9v4H3V5h4"/></svg></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <h1 id="page-title">A listing, in the order it arrived.</h1>
+          <p>Replay observation receipts and see how a listing’s state is reconstructed at each point in the record.</p>
+        </div>
+        <div class="intro-actions">
+          <button class="button button-primary" id="new-demo" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+            <span>New demo</span>
+          </button>
+          <span class="dataset-label">Fictional dataset</span>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Listing observation replay">
+        <div class="timeline-column">
+          <div class="section-heading">
+            <div>
+              <h2>Receipt timeline</h2>
+              <p id="stream-caption" class="section-note">Load a demo to inspect its event history.</p>
+            </div>
+            <span id="attempt-count" class="count-label">— attempts</span>
+          </div>
+
+          <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+          <div id="loading" class="loading-line" role="status" hidden><span class="spinner" aria-hidden="true"></span>Loading demo…</div>
+          <div id="empty-state" class="empty-state">
+            <span class="empty-mark" aria-hidden="true"></span>
+            <h3>Start with a fictional listing</h3>
+            <p>The demo includes a late observation, an exact retry, a missing ask, and a correction.</p>
+            <button class="text-button" type="button" data-new-demo>Load demo <svg class="inline-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5"/></svg></button>
+          </div>
+          <ol id="timeline" class="timeline" aria-label="Ingestion attempts"></ol>
+
+          <div id="replay" class="replay" hidden>
+            <div class="replay-controls">
+              <button class="button button-quiet" id="previous" type="button" aria-label="Previous ingestion attempt">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12.5 4.5-5.5 5.5 5.5 5.5"/></svg>
+                <span>Previous</span>
+              </button>
+              <label class="step-readout" for="step-range"><span>Replay step</span><output id="step-output" for="step-range">0 of 0</output></label>
+              <button class="button button-quiet" id="next" type="button" aria-label="Next ingestion attempt">
+                <span>Next</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4.5 5.5 5.5-5.5 5.5"/></svg>
+              </button>
+            </div>
+            <input id="step-range" class="range" type="range" min="0" max="0" value="0" aria-label="Choose ingestion attempt">
+            <div class="range-ends"><span>Before first receipt</span><span id="last-step-label">Latest attempt</span></div>
+          </div>
+        </div>
+
+        <aside class="inspector-column" aria-label="Reconstructed listing and event details">
+          <section class="projection" aria-labelledby="projection-heading">
+            <div class="section-heading compact-heading">
+              <div><h2 id="projection-heading">Reconstructed listing</h2><p class="section-note">Calculated by the API at the selected receipt.</p></div>
+              <span class="projection-state" id="projection-state">No data</span>
+            </div>
+            <div id="projection-content" class="projection-content">
+              <h3 id="listing-title">Waiting for demo</h3>
+              <dl class="projection-fields">
+                <div><dt>Observed ask</dt><dd id="current-ask">—</dd></div>
+                <div><dt>Last known ask</dt><dd id="last-ask">—</dd></div>
+                <div><dt>As of receipt</dt><dd id="as-of">—</dd></div>
+              </dl>
+              <p class="projection-footnote">Asks are observations, not sale prices. A missing ask stays unknown.</p>
+            </div>
+          </section>
+
+          <section class="event-inspector" aria-labelledby="event-heading">
+            <div class="section-heading compact-heading">
+              <div><h2 id="event-heading">Selected attempt</h2><p class="section-note" id="event-caption">Choose a timeline entry to inspect its payload.</p></div>
+              <button id="copy-event" class="copy-button" type="button" disabled>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="1"/><path d="M13 6V4.5A1.5 1.5 0 0 0 11.5 3h-7A1.5 1.5 0 0 0 3 4.5v9A1.5 1.5 0 0 0 4.5 15H7"/></svg>
+                <span>Copy JSON</span>
+              </button>
+            </div>
+            <div class="event-meta" id="event-meta" hidden></div>
+            <pre class="json-view" id="event-json" tabindex="0" aria-label="Selected event JSON"><code>{
+  "event": "Choose an attempt"
+}</code></pre>
+            <p id="copy-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+          </section>
+        </aside>
+      </section>
+
+      <footer class="page-footer">
+        <p>Each receipt stays in the record. The projection reflects only what had arrived by the selected step.</p>
+        <a href="/docs" target="_blank" rel="noreferrer">Read the API contract <svg class="external-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 6.5 9.5"/><path d="M11 9v4H3V5h4"/></svg></a>
+      </footer>
+    </main>
+  </body>
+</html>
