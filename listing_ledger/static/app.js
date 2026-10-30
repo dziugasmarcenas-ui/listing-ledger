@@ -3,10 +3,9 @@
   const ui = {
     newDemo: $('new-demo'), loading: $('loading'), notice: $('notice'), empty: $('empty-state'),
     timeline: $('timeline'), replay: $('replay'), range: $('step-range'), stepOutput: $('step-output'),
-    previous: $('previous'), next: $('next'), caption: $('stream-caption'), count: $('attempt-count'),
-    lastStep: $('last-step-label'), state: $('projection-state'), title: $('listing-title'),
+    previous: $('previous'), next: $('next'), eventHeading: $('event-heading'), state: $('projection-state'), title: $('listing-title'),
     currentAsk: $('current-ask'), lastAsk: $('last-ask'), asOf: $('as-of'),
-    eventCaption: $('event-caption'), eventMeta: $('event-meta'), json: $('event-json'),
+    json: $('event-json'),
     copy: $('copy-event'), copyFeedback: $('copy-feedback')
   };
 
@@ -62,12 +61,9 @@
       renderTimeline();
       ui.empty.hidden = true;
       ui.replay.hidden = false;
-      ui.caption.textContent = `Stream ${data.stream_id}`;
-      ui.count.textContent = `${data.attempts.length} ${data.attempts.length === 1 ? 'attempt' : 'attempts'}`;
       ui.range.min = '0';
       ui.range.max = String(data.attempts.length);
       ui.range.value = '0';
-      ui.lastStep.textContent = `${data.attempts.length} ${data.attempts.length === 1 ? 'attempt' : 'attempts'}`;
       await selectStep(0);
     } catch (error) {
       if (version !== loadRequestId) return;
@@ -110,17 +106,9 @@
       const detail = document.createElement('span');
       detail.className = 'timeline-detail';
       const event = attempt.event || {};
-      const status = event.status ? event.status[0].toUpperCase() + event.status.slice(1) : 'Event';
       const eventTime = event.observed_at ? formatDate(event.observed_at, { dateStyle: 'medium', timeStyle: 'short' }) : 'Time not supplied';
-      detail.textContent = `${status} · observed UTC ${eventTime}`;
+      detail.textContent = `${eventTime} UTC`;
       content.append(top, detail);
-
-      if (attempt.duplicate) {
-        const badge = document.createElement('span');
-        badge.className = 'duplicate-badge';
-        badge.textContent = 'Exact retry · same receipt';
-        content.append(badge);
-      }
       button.append(marker, content);
       item.append(button);
       ui.timeline.append(item);
@@ -132,7 +120,7 @@
     const bounded = Math.max(0, Math.min(session.attempts.length, Number(index)));
     selectedIndex = bounded;
     ui.range.value = String(bounded);
-    ui.stepOutput.textContent = `${bounded} of ${session.attempts.length}`;
+    ui.stepOutput.textContent = `${bounded} / ${session.attempts.length}`;
     ui.previous.disabled = bounded === 0;
     ui.next.disabled = bounded === session.attempts.length;
     ui.timeline.querySelectorAll('.timeline-entry').forEach((button) => {
@@ -144,15 +132,12 @@
 
     if (bounded > 0) {
       const attempt = session.attempts[bounded - 1];
-      ui.eventCaption.textContent = attempt.duplicate ? 'Retry attempt · no additional event was stored.' : `Receipt sequence ${attempt.sequence}`;
-      ui.eventMeta.hidden = false;
-      ui.eventMeta.textContent = `${attempt.label} · receipt #${attempt.sequence}${attempt.duplicate ? ' · duplicate attempt' : ''}`;
+      ui.eventHeading.textContent = attempt.label;
       ui.json.querySelector('code').textContent = JSON.stringify(attempt.event, null, 2);
       ui.copy.disabled = false;
     } else {
-      ui.eventCaption.textContent = 'No event has arrived at this step.';
-      ui.eventMeta.hidden = true;
-      ui.json.querySelector('code').textContent = '{\n  "event": "No receipt yet"\n}';
+      ui.eventHeading.textContent = 'Event';
+      ui.json.querySelector('code').textContent = 'No event yet.';
       ui.copy.disabled = true;
     }
 
@@ -178,7 +163,7 @@
   function setProjectionPending() {
     ui.state.textContent = 'Loading';
     ui.state.dataset.status = 'unknown';
-    ui.title.textContent = 'Loading reconstructed state';
+    ui.title.textContent = 'Loading';
     ui.currentAsk.textContent = 'Loading…';
     ui.lastAsk.textContent = 'Loading…';
     ui.asOf.textContent = 'Loading…';
@@ -188,34 +173,35 @@
     ui.state.textContent = 'Unavailable';
     ui.state.dataset.status = 'unknown';
     ui.title.textContent = 'Projection unavailable';
-    ui.currentAsk.textContent = 'Unknown · projection failed';
-    ui.lastAsk.textContent = 'Unknown · projection failed';
+    ui.currentAsk.textContent = 'Unknown';
+    ui.lastAsk.textContent = 'Unknown';
     ui.asOf.textContent = 'Not available';
   }
 
   function renderProjection(projection) {
-    ui.title.textContent = projection.title || 'Listing title unknown';
+    ui.title.textContent = projection.has_observations === false
+      ? 'No observations yet'
+      : projection.title || 'Unknown listing';
     ui.state.textContent = projection.status ? capitalize(projection.status) : 'Unknown';
     ui.state.dataset.status = projection.status || 'unknown';
     ui.currentAsk.textContent = projection.price_minor === null || projection.price_minor === undefined
-      ? 'No ask recorded at this step'
+      ? 'Unknown'
       : formatMoney(projection.price_minor, projection.currency);
     ui.lastAsk.textContent = projection.last_known_price_minor === null || projection.last_known_price_minor === undefined
-      ? 'No known ask'
+      ? 'Unknown'
       : formatMoney(projection.last_known_price_minor, projection.last_known_price_currency);
-    ui.asOf.textContent = `Receipt #${projection.as_of_sequence}`;
+    ui.asOf.textContent = `#${projection.as_of_sequence}`;
   }
 
   function resetInspector() {
     ui.state.textContent = 'No data';
     ui.state.dataset.status = 'unknown';
-    ui.title.textContent = 'Waiting for demo';
-    ui.currentAsk.textContent = '—';
-    ui.lastAsk.textContent = '—';
+    ui.title.textContent = 'No observations yet';
+    ui.currentAsk.textContent = 'Unknown';
+    ui.lastAsk.textContent = 'Unknown';
     ui.asOf.textContent = '—';
-    ui.eventCaption.textContent = 'Choose a timeline entry to inspect its payload.';
-    ui.eventMeta.hidden = true;
-    ui.json.querySelector('code').textContent = '{\n  "event": "Choose an attempt"\n}';
+    ui.eventHeading.textContent = 'Event';
+    ui.json.querySelector('code').textContent = 'No event yet.';
     ui.copy.disabled = true;
   }
 

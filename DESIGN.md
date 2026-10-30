@@ -22,7 +22,7 @@ Use a warm paper ground, deep ink, quiet mineral rules, and one muted vermilion 
 
 ## Interaction
 
-Controls have clear labels, visible focus, and at least 44px hit areas. Selection and replay update synchronously from the visitor’s perspective; keyboard stepping has no animation. Buttons use a brief 120ms press response. Respect reduced motion. Error states explain the failure and offer a retry. Empty states explain how to load a fictional demo.
+Keep visible copy minimal; controls still need accessible names, visible focus, and at least 44px hit areas. Selection and replay update synchronously from the visitor’s perspective; keyboard stepping has no animation. Buttons use a brief 120ms press response. Respect reduced motion. Error states explain the failure and offer a retry.
 
 ## Responsive behavior
 
