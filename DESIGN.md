@@ -2,28 +2,30 @@
 
 ## Surface
 
-Operate mode: a daylight review workspace for examining how listing observations arrive and how the backend reconstructs state. The timeline is the primary artifact; the listing projection and selected event are its reading aids.
+A dark review workspace for inspecting an append-only timeline, reconstructed listing state and selected event. Keep visible copy sparse and preserve the reading order.
 
 ## Visual direction
 
-Use a warm paper ground, deep ink, quiet mineral rules, and one muted vermilion accent. Typography is a confident system sans for headings and body, with a restrained system monospace only for IDs, timestamps, sequence numbers, and JSON. Keep the page open and editorial: broad margins, ruled sections, a continuous timeline, and one unboxed inspector area. No gradients, glass, nested cards, photography, or decorative dashboard metrics.
+Broad visual reference: [Great UI](https://www.great-ui.com/). Independently authored styling uses charcoal surfaces, local Geist typography, rounded controls and restrained orange selection. No reference component code, branding or page assets are included.
 
 ## Tokens
 
-- Paper: `#f7f5f0`; raised paper: `#fffefa`
-- Ink: `#24231f`; secondary ink: `#625f58`; quiet ink: `#6e6a62`
-- Rule: `#d8d4cb`; soft rule: `#e9e5dc`
-- Accent: `#a33d31`; accent wash: `#f3e8e4`
-- Positive state: `#315e49`; unavailable state: `#8b463c`
-- Body face: system sans stack; data face: system monospace stack
-- Page measure: 1180px maximum; reading measure: 68ch
-- Spacing unit: 4px; section rhythm: 32–56px
-- Corners: 4px for controls, 2px for tags; avoid rounded panel containers
+- Canvas: `#0a0a0a`; workspace: `#111111`; raised surface: `#171717`
+- Text: `#ededed`; secondary: `#aaaaaa`; quiet: `#999999`
+- Border: `#303030`; soft border: `#242424`
+- Accent: `#f57c26`; accent wash: `#2c2016`
+- Body: local Geist variable, system sans fallback; data: system monospace
+- Page width: 1180px; breakpoint: 760px
+- Controls: 12px corners and minimum 44px hit area; workspace: 20px corners
 
 ## Interaction
 
-Keep visible copy minimal; controls still need accessible names, visible focus, and at least 44px hit areas. Selection and replay update synchronously from the visitor’s perspective; keyboard stepping has no animation. Buttons use a brief 120ms press response. Respect reduced motion. Error states explain the failure and offer a retry.
+Preserve native keyboard replay, visible focus, explicit Unknown values and accessible names. Brief button press feedback respects reduced motion. The replay API and event semantics are unchanged.
 
 ## Responsive behavior
 
-At 760px and below, stack the timeline and inspector in reading order, keep controls full-width where useful, and allow long identifiers and JSON to wrap or scroll inside their own region. The page remains usable at 375px without horizontal page overflow.
+Stack timeline and inspector below 760px. Long JSON wraps within its own scroll region. Screenshots are full-page captures; browser viewport dimensions need not equal image dimensions.
+
+## Verification
+
+Checked at 1440×950 and 375×812 viewports: no horizontal overflow, aligned timeline markers, loaded local Geist, and minimum 44px controls. Preview images are full-page content captures.

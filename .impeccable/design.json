@@ -1,21 +1,21 @@
 {
   "surface": "listing-ledger local demo",
   "mode": "operate",
-  "world": "Daylight paper-and-ink review workspace with a continuous ruled event timeline and warm vermilion accent.",
+  "world": "Charcoal review workspace with Geist typography, rounded controls and restrained orange selection.",
   "tokens": {
     "color": {
-      "paper": "#f7f5f0",
-      "surface": "#fffefa",
-      "ink": "#24231f",
-      "secondary": "#625f58",
-      "quiet": "#6e6a62",
-      "rule": "#d8d4cb",
-      "accent": "#a33d31",
-      "accentWash": "#f3e8e4",
-      "positive": "#315e49"
+      "paper": "#0a0a0a",
+      "surface": "#171717",
+      "ink": "#ededed",
+      "secondary": "#aaaaaa",
+      "quiet": "#999999",
+      "rule": "#303030",
+      "accent": "#f57c26",
+      "accentWash": "#2c2016",
+      "positive": "#a4cbb3"
     },
     "type": {
-      "body": "system sans-serif stack",
+      "body": "local Geist variable with system sans fallback",
       "data": "system monospace stack",
       "headingTracking": "-0.025em"
     },
