@@ -71,3 +71,7 @@ The service is unauthenticated and binds to loopback for local review. Do not ex
 - `tests/` — backend behavior checks.
 - `docs/architecture.md` — receipt and projection flow.
 - `docs/implementation-plan.md` — implementation outline and failure behavior.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
